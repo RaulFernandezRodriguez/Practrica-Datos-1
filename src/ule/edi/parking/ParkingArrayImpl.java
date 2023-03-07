@@ -39,44 +39,25 @@ public class ParkingArrayImpl implements Parking {
 		Space newVehicle = new Space(toe,r);
 		if(spaces.length > 0){
 			for(int i = 0; i < spaces.length; i++){
-				if(spaces[i].getVehicle().equals(r) && spaces[i].getTimeOfEntry().equals(toe))
+				if(spaces[i] != null && spaces[i].getVehicle().equals(r) && spaces[i].getTimeOfEntry().equals(toe))
 				existing = true;
 			}
 			do{
 				if(spaces[counter] == null){
 				spaces[counter] = newVehicle;
-				//spaces[counter].setTimeOfEntry(toe);
-				added = true;
-				}
-				counter++;
-			} while(added != true && existing != true);
-			}		
-			return added;
-	    }	
-			
-	
-	@Override
-	public boolean addVehicle(Vehicle r) {
-		Date someDate = new Date();
-		boolean added = false;
-		boolean existing = false;
-		int counter = 0;
-		Space newVehicle = new Space(someDate,r);
-		if(spaces.length > 0){
-			for(int i = 0; i < spaces.length; i++){
-				if(spaces[i].getVehicle().equals(r) && spaces[i].getTimeOfEntry().equals(someDate))
-				existing = true;
-			}
-			do{
-				if(spaces[counter] == null){
-				spaces[counter] = newVehicle;
-				//spaces[counter].setTimeOfEntry(someDate);
 				added = true;
 				}
 				counter++;
 			} while(added != true && existing != true);
 			}		
 		return added;
+	}	
+			
+	
+	@Override
+	public boolean addVehicle(Vehicle r) {
+		Date someDate = new Date();
+		return addVehicleWithTimeOfEntry(r, someDate);
 	}
 	
 	@Override
@@ -102,17 +83,14 @@ public class ParkingArrayImpl implements Parking {
 		return this.getNumberOfSpaces() - this.getUsedSpaces();
 	}
 
-	// public boolean search(Vehicle r){
-		
-	// 	return false;
-	// }
-
 	@Override
 	public void removeVehicle(Vehicle r){
-		if (spaces[0] != null){
+		if (spaces.length > 0){
  			for (int i=0; i < spaces.length;i++){
-				if (spaces[i].equals(r)){
-				spaces[i] = null;
+				if(spaces[i] != null){
+					if (spaces[i].getVehicle().equals(r)){
+					spaces[i] = null;
+					}
 				}
 			}
 		}
@@ -120,33 +98,36 @@ public class ParkingArrayImpl implements Parking {
 
 	@Override
 	public int getNumberOfCars() {
-		int numOfCars= 0;
+		int numOfCars = 0;
 		if(spaces.length != 0)
 		for(int i = 0; i < spaces.length; i++){
-			if(spaces[i].getVehicle().equals(new Car("A")));
+			if((spaces[i] != null) && (spaces[i].getVehicle().getClass() == Car.class)){
 			numOfCars++;
+			}
 		}
 		return numOfCars;
 	}
 
 	@Override
 	public int getNumberOfMotorcycles() {
-		int numOfMoto= 0;
-		if(spaces.length != 0)
+		int numOfMoto = 0;
+		if(spaces.length > 0)
 		for(int i = 0; i < spaces.length; i++){
-			if(spaces[i].getVehicle().equals(new Motorcycle("A")))
+			if((spaces[i] != null) && (spaces[i].getVehicle().getClass() == Motorcycle.class)){
 			numOfMoto++;
+			}
 		}
 		return numOfMoto;
 	}
 
 	@Override
 	public int getNumberOfCaravans() {
-		int numOfCaravan= 0;
-		if(spaces.length != 0)
+		int numOfCaravan = 0;
+		if(spaces.length > 0)
 		for(int i = 0; i < spaces.length; i++){
-			if(spaces[i].getVehicle().equals(new Caravan("A")))
+			if((spaces[i] != null) && (spaces[i].getVehicle().getClass() == Caravan.class)){
 			numOfCaravan++;
+			}
 		}
 		return numOfCaravan;
 	}
@@ -197,7 +178,9 @@ public class ParkingArrayImpl implements Parking {
 	public double getAmountWithReferenceDate(Date reference) {
 		double cost = 0;
 		for(int i = 0; i < spaces.length; i++){
-		cost = cost + (reference.getTime() - spaces[i].getTimeOfEntry().getTime());
+			if(spaces[i] != null){
+			cost = cost + (reference.getTime() - spaces[i].getTimeOfEntry().getTime());
+			}
 		}
 		cost = (cost / 60000) * costPerMinute;
 		return cost;

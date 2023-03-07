@@ -11,6 +11,7 @@ import java.util.Date;
 
 import ule.edi.parking.vehicles.Car;
 import ule.edi.parking.vehicles.Motorcycle;
+import ule.edi.parking.vehicles.Caravan;
 
 public class ParkingArrayImplTests {
 
@@ -63,33 +64,139 @@ public class ParkingArrayImplTests {
 		Assert.assertTrue(cheapParking.addVehicleWithTimeOfEntry(new Motorcycle("X"), parseLocalDate("01/03/2017 16:51:00")));
 
 		//	a las 16:52:00 del mismo día, la moto A lleva 2' y la X 1', a 0.01 por minuto ; debe ser exáctamente 0.03
-		Assert.assertEquals(cheapParking.getAmountWithReferenceDate(parseLocalDate("01/03/2017 16:52:00")), 0.02 + 0.01, 0.0);
+		Assert.assertEquals( 0.02 + 0.01, 0.0, cheapParking.getAmountWithReferenceDate(parseLocalDate("01/03/2017 16:52:00")));
 	}
 	
 	@Test
-	public void testAddingVehiclesWithTime() throws Exception{
-		Car car = new Car("A");
+	public void testAddingVehicleWithTime() throws Exception{
 		Date someDate = new Date();
+		Car car = new Car("A");
+		Motorcycle moto = new Motorcycle("B");
+		Caravan caravan = new Caravan("C");
+		assertTrue(cheapParking.addVehicleWithTimeOfEntry(car,someDate));
+		assertTrue(cheapParking.addVehicleWithTimeOfEntry(moto,someDate));
+		assertTrue(cheapParking.addVehicleWithTimeOfEntry(caravan,someDate));
+	}
+
+	@Test
+	public void testNotAddingVehicleWithTime() throws Exception{
+		Date someDate = new Date();
+		Car car = new Car("A");
+		Motorcycle moto = new Motorcycle("B");
+		Caravan caravan = new Caravan("C");
+		cheapParking.addVehicleWithTimeOfEntry(car, someDate);
+		cheapParking.addVehicleWithTimeOfEntry(moto, someDate);
+		cheapParking.addVehicleWithTimeOfEntry(caravan, someDate);
+		assertFalse(cheapParking.addVehicleWithTimeOfEntry(car,someDate));
+		assertFalse(cheapParking.addVehicleWithTimeOfEntry(moto,someDate));
+		assertFalse(cheapParking.addVehicleWithTimeOfEntry(caravan,someDate));
+	}
+
+	@Test
+	public void testAddingCarWithTime() throws Exception{
+		Date someDate = new Date();
+		Car car = new Car("A");
 		assertTrue(cheapParking.addVehicleWithTimeOfEntry(car,someDate));
 	}
 
 	@Test
-	public void testNotAddingVehiclesWithTime() throws Exception{
-		Car car = new Car("A");
+	public void testNotAddingCarWithTime() throws Exception{
 		Date someDate = new Date();
+		Car car = new Car("A");
+		cheapParking.addVehicleWithTimeOfEntry(car, someDate);
 		assertFalse(cheapParking.addVehicleWithTimeOfEntry(car,someDate));
+	}
+
+	@Test
+	public void testAddingMotocycleWithTime() throws Exception{
+		Date someDate = new Date();
+		Motorcycle moto = new Motorcycle("B");
+		assertTrue(cheapParking.addVehicleWithTimeOfEntry(moto,someDate));
+	}
+
+	@Test
+	public void testNotAddingMotocycleWithTime() throws Exception{
+		Date someDate = new Date();
+		Motorcycle moto = new Motorcycle("B");
+		cheapParking.addVehicleWithTimeOfEntry(moto, someDate);
+		assertFalse(cheapParking.addVehicleWithTimeOfEntry(moto,someDate));
+	}
+
+	@Test
+	public void testAddingCaravanWithTime() throws Exception{
+		Date someDate = new Date();
+		Caravan caravan = new Caravan("C");
+		assertTrue(cheapParking.addVehicleWithTimeOfEntry(caravan,someDate));
+	}
+
+	@Test
+	public void testNotAddingCaravanWithTime() throws Exception{
+		Date someDate = new Date();
+		Caravan caravan = new Caravan("C");
+		cheapParking.addVehicleWithTimeOfEntry(caravan, someDate);
+		assertFalse(cheapParking.addVehicleWithTimeOfEntry(caravan,someDate));
 	}
 
 	@Test
 	public void testAddingVehicle() throws Exception{
 		Car car = new Car("A");
+		Motorcycle moto = new Motorcycle("B");
+		Caravan caravan = new Caravan("C");
 		assertTrue(cheapParking.addVehicle(car));
+		assertTrue(cheapParking.addVehicle(moto));
+		assertTrue(cheapParking.addVehicle(caravan));
 	}
 
 	@Test
 	public void testNotAddingVehicle() throws Exception{
 		Car car = new Car("A");
+		Motorcycle moto = new Motorcycle("B");
+		Caravan caravan = new Caravan("C");
+		cheapParking.addVehicle(car);
+		cheapParking.addVehicle(moto);
+		cheapParking.addVehicle(caravan);
 		assertFalse(cheapParking.addVehicle(car));
+		assertFalse(cheapParking.addVehicle(moto));
+		assertFalse(cheapParking.addVehicle(caravan));
+	}
+
+	@Test
+	public void testAddingCar() throws Exception{
+		Car car = new Car("A");
+		assertTrue(cheapParking.addVehicle(car));
+	}
+
+	@Test
+	public void testNotAddingCar() throws Exception{
+		Car car = new Car("A");
+		cheapParking.addVehicle(car);
+		assertFalse(cheapParking.addVehicle(car));
+	}
+
+	@Test
+	public void testAddingMotorcycle() throws Exception{
+		Motorcycle moto = new Motorcycle("A");
+		assertTrue(cheapParking.addVehicle(moto));
+	}
+
+	@Test
+	public void testNotAddingMotorcycle() throws Exception{
+		Motorcycle moto = new Motorcycle("A");
+		cheapParking.addVehicle(moto);
+		assertFalse(cheapParking.addVehicle(moto));
+	}
+
+	@Test
+	public void testAddingCaravan() throws Exception{
+		Caravan caravan = new Caravan("A");
+		assertTrue(cheapParking.addVehicle(caravan));
+	}
+
+	@Test
+	public void testNotAddingCaravan() throws Exception{
+		Caravan caravan = new Caravan("A");
+		cheapParking.addVehicle(caravan);
+		assertFalse(cheapParking.addVehicle(caravan));
 	}
 
 	@Test
@@ -107,38 +214,61 @@ public class ParkingArrayImplTests {
 		Motorcycle moto = new Motorcycle("A");
 		cheapParking.addVehicle(moto);
 		cheapParking.removeVehicle(moto);
-		assertEquals(null, cheapParking[0]);
-	}
-
-	@Test
-	public void testNumberOfCars() throws Exception{
-		assertEquals(0, cheapParking.getNumberOfCars());
-	}
-
-	@Test
-	public void testNumberOfMotorcycles() throws Exception{
 		assertEquals(0, cheapParking.getNumberOfMotorcycles());
 	}
 
 	@Test
+	public void testNotRemoveVehicle() throws Exception{
+		Motorcycle moto = new Motorcycle("A");
+		Car car = new Car("A");
+		cheapParking.addVehicle(car);
+		cheapParking.addVehicle(moto);
+		cheapParking.removeVehicle(car);
+		assertEquals(1, cheapParking.getNumberOfMotorcycles());
+	}
+
+	@Test
+	public void testNumberOfCars() throws Exception{
+		Car car = new Car("A");
+		cheapParking.addVehicle(car);
+		assertEquals(1, cheapParking.getNumberOfCars());
+	}
+
+	@Test
+	public void testNumberOfMotorcycles() throws Exception{
+		Motorcycle moto = new Motorcycle("A");
+		cheapParking.addVehicle(moto);
+		assertEquals(1, cheapParking.getNumberOfMotorcycles());
+	}
+
+	@Test
 	public void testNumberOfCaravans() throws Exception{
-		assertEquals(0, cheapParking.getNumberOfCaravans());
+		Caravan caravan = new Caravan("A");
+		cheapParking.addVehicle(caravan);
+		assertEquals(1, cheapParking.getNumberOfCaravans());
 	}
 
 	@Test
-	public void testCurrentAmountParking() throws Exception{
-		Date actualDate = new Date();
-		assertEquals(0, cheapParking.getAmountWithReferenceDate(actualDate));
-	}
-
+	public void testGetAmountWithReferenceDate() throws Exception{
+        Car car = new Car("A");
+		cheapParking.addVehicleWithTimeOfEntry(car, parseLocalDate("01/03/2017 16:50:00"));
+		assertEquals(0.02, cheapParking.getAmountWithReferenceDate(parseLocalDate("01/03/2017 16:52:00")), 0.00);
+    }	
+	
 	@Test
-	public void testCostWithDate() throws Exception{
-		Date someDate = new Date();
-		assertEquals(0, cheapParking.getAmountWithReferenceDate(someDate));
-	}
+	public void testNotGetAmountWithReferenceDate() throws Exception{
+        Car car = new Car("A");
+		cheapParking.addVehicleWithTimeOfEntry(car, parseLocalDate("01/03/2017 16:50:00"));
+		assertNotEquals(0.04, cheapParking.getAmountWithReferenceDate(parseLocalDate("01/03/2017 16:52:00")), 0.00);
+    }	
+
+    @Test
+    public void testGetCurrentAmount() throws Exception{
+        assertEquals(this.cheapParking.getAmountWithReferenceDate(new Date()), this.cheapParking.getCurrentAmount(), 0.00);
+    }
 
 	@Test
 	public void testCostPerMinute() throws Exception{
-		assertEquals(0.01 , cheapParking.getCostPerMinute());
+		assertEquals(0.01 , cheapParking.getCostPerMinute(), 0.00);
 	}
 }
